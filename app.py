@@ -78,7 +78,6 @@ if st.button("Submit"):
                     f.write(file.getbuffer())
 
             resume_results = process_resumes(file=save_path,job_description=job_description)
-            print("resume_results ==> ",resume_results)
             # score = random.randint(60, 100)  # Mock scoring
             results.append({"file_name": file.name, 
                             "score": resume_results["score"],
@@ -96,14 +95,15 @@ if st.button("Submit"):
             # Missing Requirements
             st.markdown("**Resume Missing Requirements:**")
             if result["resume_missing_requirements"]:
-                st.markdown(result["resume_missing_requirements"])
+                st.markdown( body="- " + "\n - ".join(result["resume_missing_requirements"].split("\n")).replace("•",""))
             else:
                 st.markdown("✅ No missing requirements!")
 
             # Key Skill Matches
             st.markdown("**Key Skill Matches:**")
             if result["key_skill_matches"]:
-                st.markdown(result["key_skill_matches"])
+                st.markdown( body="- " + "\n - ".join(result["key_skill_matches"].split("\n")).replace("•",""))
+                # st.markdown(result["key_skill_matches"])
             else:
                 st.markdown("❌ No key skills matched!")
 

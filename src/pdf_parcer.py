@@ -23,7 +23,7 @@ def process_resumes(file, job_description ):
         resume_details = resume_obj.analyze(resume=pdf_reader,jd=job_description)
         resume_scores = resume_obj.calculate_score(scores=resume_details)
         print("resume_scores ==> ",resume_scores)
-        print("resume_details ==> ",resume_details)
+        # print("resume_details ==> ",resume_details)
         return({"key_skill_matches": resume_details.key_matches,        "resume_missing_requirements":resume_details.resume_missing_requirements, 
                 "score": resume_scores,"outside_task":resume_details.outside_task})
     except Exception as e:

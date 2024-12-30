@@ -68,13 +68,39 @@ class ResumeMatchScores(BaseModel):
     )
 
 class ResumeJDAnalyzer:
+    """
+    A class to analyze resumes against job descriptions (JDs) and provide insights on alignment scores,
+    missing requirements, and key matches.
+    """
     def __init__(self):
+        """
+        Initializes the ResumeJDAnalyzer class and sets up the analysis pipeline.
+        """
         self.resume_pipeline = self._generate_pipeline()
-    def analyze(self,resume:str,jd:str)->list[str,int]:
+    def analyze(self,resume:str,jd:str)->dict[str,int]:
+        """
+        Analyzes a single resume against a job description.
+        
+        Args:
+            resume (str): The content of the candidate's resume.
+            jd (str): The content of the job description.
+
+        Returns:
+            dictionary[str, int]: A dictionary containing the analysis results.
+        """
         result = self._analyze_single_resume(resume_content=resume,jd=jd)
         return result
-    def _analyze_single_resume(self, resume_content,jd):
-       
+    def _analyze_single_resume(self, resume_content,jd)->dict:
+        """
+        Internal method to perform analysis on a single resume.
+
+        Args:
+            resume_content (str): The content of the resume.
+            jd (str): The content of the job description.
+
+        Returns:
+            dict: A dictionary with analysis results.
+        """
         return self.resume_pipeline.invoke({"jd_content":jd,"resume_content":resume_content})
 
     def _generate_pipeline(self):
@@ -114,6 +140,15 @@ class ResumeJDAnalyzer:
         return prompt|llm.with_structured_output(ResumeMatchScores)
 
     def calculate_score(self,scores):
+        """
+        Calculates a total suitability score based on weighted factors.
+
+        Args:
+            scores (ResumeMatchScores): The analysis scores.
+
+        Returns:
+            float: The total weighted suitability score (out of 100).
+        """
         matches = scores.__dict__
         skills_score = matches.get("skill_match", 0) * 0.4
         experience_score = matches.get("experience_match", 0) * 0.3
@@ -123,6 +158,15 @@ class ResumeJDAnalyzer:
         return total_score*100
     
     def calculate_scores_list(self, analyses)->list[dict[str,int]]:
+        """
+        Calculates suitability scores for multiple analyses.
+
+        Args:
+            analyses (list): A list of analysis results.
+
+        Returns:
+            list[float]: A list of suitability scores for each candidate.
+        """
         scores = []
         for analysis in analyses:
             matches = analysis.__dict__
@@ -136,6 +180,13 @@ class ResumeJDAnalyzer:
         return scores
     
     def visualize_scores(self, candidates,scores):
+        """
+        Visualizes suitability scores for candidates using a bar chart.
+
+        Args:
+            candidates (list[str]): List of candidate names.
+            scores (list[float]): List of suitability scores for each candidate.
+        """
         plt.bar(candidates, scores, color='skyblue')
         plt.xlabel("Candidates")
         plt.ylabel("Suitability Scores")

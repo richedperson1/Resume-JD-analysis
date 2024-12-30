@@ -64,10 +64,12 @@ A visually engaging and functional **Streamlit** application for matching resume
 
 ## 📦 Requirements
 
-- Python 3.8 or higher
+- Python 3.12 or higher
 - Libraries:
   - `streamlit`
-  - `PyPDF2`
+  - `docling`
+  - `openai`
+  - `langchain`
 
 ---
 
